@@ -16,7 +16,41 @@ body{font-family:'Inter',sans-serif;background:#080808;color:#fff;overflow-x:hid
   --dark:#080808;
   --dark2:#0e0e0e;
   --border:rgba(255,255,255,.07);
+  --btn-radius:9999px;
+  --snake-border:2px;
 }
+@keyframes snakeSpin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+@keyframes btnShine{
+  0%,100%{box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 0 16px rgba(201,162,39,.15)}
+  50%{box-shadow:inset 0 1px 0 rgba(255,255,255,.38),0 0 28px rgba(201,162,39,.35)}
+}
+@keyframes btnShineGreen{
+  0%,100%{box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 0 14px rgba(37,211,102,.2)}
+  50%{box-shadow:inset 0 1px 0 rgba(255,255,255,.32),0 0 26px rgba(37,211,102,.45)}
+}
+@keyframes btnShineGhost{
+  0%,100%{box-shadow:inset 0 0 0 1px rgba(255,255,255,.04)}
+  50%{box-shadow:inset 0 0 0 1px rgba(255,255,255,.1),0 0 20px rgba(201,162,39,.12)}
+}
+.snake-btn{position:relative;z-index:0;border:none;border-radius:var(--btn-radius);isolation:isolate;overflow:hidden;text-decoration:none;transition:transform .25s,filter .25s}
+.snake-btn::before{content:'';position:absolute;top:50%;left:50%;width:160%;aspect-ratio:1;transform:translate(-50%,-50%);animation:snakeSpin 2.6s linear infinite;z-index:-2;pointer-events:none}
+.snake-btn::after{content:'';position:absolute;inset:var(--snake-border);border-radius:inherit;z-index:-1;pointer-events:none;transition:background .25s,box-shadow .25s}
+.snake-btn>*{position:relative;z-index:1}
+.snake-btn:hover{transform:translateY(-2px);filter:brightness(1.05)}
+.snake-gold::before{background:conic-gradient(from 0deg,transparent 0deg,transparent 255deg,rgba(201,162,39,.35) 275deg,rgba(255,255,255,.95) 295deg,#fff 305deg,var(--gold-light) 315deg,rgba(255,255,255,.85) 325deg,rgba(201,162,39,.4) 340deg,transparent 360deg)}
+.snake-gold::after{background:var(--gold);animation:btnShine 3s ease-in-out infinite}
+.snake-gold:hover::after{background:var(--gold-light)}
+.snake-green::before{background:conic-gradient(from 0deg,transparent 0deg,transparent 255deg,rgba(37,211,102,.35) 275deg,rgba(255,255,255,.95) 295deg,#fff 305deg,#5eead4 315deg,rgba(255,255,255,.85) 325deg,rgba(37,211,102,.45) 340deg,transparent 360deg)}
+.snake-green::after{background:#25D366;animation:btnShineGreen 3s ease-in-out infinite}
+.snake-green:hover::after{background:#1fc55e}
+.snake-ghost::before{background:conic-gradient(from 0deg,transparent 0deg,transparent 250deg,rgba(255,255,255,.12) 275deg,rgba(255,255,255,.55) 295deg,var(--gold-light) 305deg,rgba(255,255,255,.7) 320deg,rgba(201,162,39,.35) 335deg,transparent 360deg)}
+.snake-ghost::after{background:var(--dark);animation:btnShineGhost 3.2s ease-in-out infinite}
+.snake-ghost:hover{color:#fff}
+.snake-ghost:hover::after{background:rgba(255,255,255,.05)}
+.snake-ghost-dark::before{background:conic-gradient(from 0deg,transparent 0deg,transparent 250deg,rgba(255,255,255,.1) 275deg,rgba(255,255,255,.5) 295deg,rgba(201,162,39,.6) 305deg,rgba(255,255,255,.65) 320deg,rgba(255,255,255,.15) 335deg,transparent 360deg)}
+.snake-ghost-dark::after{background:var(--dark2)}
+.snake-ghost-dark:hover{color:#fff}
+.snake-ghost-dark:hover::after{background:#141414}
 nav{
   position:sticky;top:0;z-index:200;
   background:rgba(8,8,8,.92);
@@ -28,9 +62,9 @@ nav{
 }
 .nav-brand{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;letter-spacing:.04em;color:#fff;text-transform:uppercase;}
 .nav-brand span{color:var(--gold)}
-.nav-wa{display:flex;align-items:center;gap:8px;background:var(--gold);color:#000;font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:10px 20px;border-radius:4px;text-decoration:none;transition:all .2s;}
-.nav-wa:hover{background:var(--gold-light);transform:translateY(-1px)}
+.nav-wa{display:inline-flex;align-items:center;gap:8px;color:#000;font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:10px 20px}
 .nav-wa svg{width:16px;height:16px}
+.nav-wa:hover{transform:translateY(-1px)}
 
 .hero{min-height:92vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 6%;position:relative;overflow:hidden;background:#080808;}
 .hero-noise{position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");opacity:.4;pointer-events:none;}
@@ -43,13 +77,9 @@ nav{
 .hero h1 em{color:transparent;font-style:normal;-webkit-text-stroke:2px var(--gold);}
 .hero-sub{font-size:16px;font-weight:300;color:rgba(255,255,255,.5);max-width:480px;line-height:1.7;margin-bottom:44px;position:relative;z-index:1;opacity:0;animation:fadeUp .8s .4s ease forwards;}
 .hero-cta{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;position:relative;z-index:1;opacity:0;animation:fadeUp .8s .55s ease forwards;}
-.btn-primary{display:inline-flex;align-items:center;gap:10px;background:var(--gold);color:#000;font-size:14px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:16px 32px;border-radius:4px;text-decoration:none;transition:all .25s;position:relative;overflow:hidden;}
-.btn-primary::after{content:'';position:absolute;inset:0;background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.25) 50%,transparent 70%);transform:translateX(-100%);transition:transform .5s;}
-.btn-primary:hover::after{transform:translateX(100%)}
-.btn-primary:hover{background:var(--gold-light);transform:translateY(-2px);box-shadow:0 12px 40px rgba(201,162,39,.3)}
+.btn-primary{display:inline-flex;align-items:center;gap:10px;color:#000;font-size:14px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:16px 32px}
 .btn-primary svg{width:20px;height:20px}
-.btn-ghost{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.6);font-size:13px;font-weight:500;padding:15px 24px;border-radius:4px;text-decoration:none;transition:all .2s;}
-.btn-ghost:hover{border-color:rgba(255,255,255,.4);color:#fff;background:rgba(255,255,255,.04)}
+.btn-ghost{display:inline-flex;align-items:center;gap:8px;color:rgba(255,255,255,.6);font-size:13px;font-weight:500;padding:15px 24px;transition:color .2s}
 .hero-stats{display:flex;justify-content:center;gap:0;margin-top:72px;padding-top:48px;border-top:1px solid var(--border);width:100%;max-width:640px;position:relative;z-index:1;opacity:0;animation:fadeUp .8s .7s ease forwards;}
 .stat{text-align:center;flex:1;padding:0 24px;position:relative}
 .stat+.stat::before{content:'';position:absolute;left:0;top:10%;height:80%;width:1px;background:var(--border);}
@@ -113,11 +143,9 @@ section.block{padding:96px 6%}
 .uni-row{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:rgba(255,255,255,.4);line-height:1.5}
 .uni-row svg{width:15px;height:15px;stroke:rgba(201,162,39,.5);flex-shrink:0;margin-top:2px}
 .uni-btns{display:flex;flex-direction:column;gap:8px;margin-top:4px}
-.u-btn-wa{display:flex;align-items:center;justify-content:center;gap:8px;background:#25D366;color:#fff;font-size:13px;font-weight:600;letter-spacing:.04em;padding:11px 16px;border-radius:4px;text-decoration:none;transition:background .2s;}
-.u-btn-wa:hover{background:#1fc55e}
+.u-btn-wa{display:flex;align-items:center;justify-content:center;gap:8px;color:#fff;font-size:13px;font-weight:600;letter-spacing:.04em;padding:11px 16px}
 .u-btn-wa svg{width:16px;height:16px}
-.u-btn-map{display:flex;align-items:center;justify-content:center;gap:7px;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.4);font-size:12px;font-weight:500;padding:10px 16px;border-radius:4px;text-decoration:none;transition:all .2s;}
-.u-btn-map:hover{border-color:rgba(255,255,255,.3);color:#fff}
+.u-btn-map{display:flex;align-items:center;justify-content:center;gap:7px;color:rgba(255,255,255,.4);font-size:12px;font-weight:500;padding:10px 16px;transition:color .2s}
 .u-btn-map svg{width:14px;height:14px}
 
 .cta-bg{background:var(--dark2);border-top:1px solid var(--border);text-align:center;padding:96px 6%;position:relative;overflow:hidden;}
@@ -125,10 +153,7 @@ section.block{padding:96px 6%}
 .cta-bg h2{font-family:'Barlow Condensed',sans-serif;font-size:clamp(36px,6vw,72px);font-weight:900;text-transform:uppercase;color:#fff;line-height:.95;margin-bottom:16px;position:relative;z-index:1;}
 .cta-bg h2 em{font-style:normal;color:var(--gold)}
 .cta-bg p{font-size:15px;color:rgba(255,255,255,.4);margin-bottom:40px;position:relative;z-index:1}
-.btn-cta-big{display:inline-flex;align-items:center;gap:12px;background:var(--gold);color:#000;font-size:15px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:18px 40px;border-radius:4px;text-decoration:none;transition:all .25s;position:relative;overflow:hidden;z-index:1;}
-.btn-cta-big::after{content:'';position:absolute;inset:0;background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.3) 50%,transparent 70%);transform:translateX(-100%);transition:transform .5s;}
-.btn-cta-big:hover::after{transform:translateX(100%)}
-.btn-cta-big:hover{background:var(--gold-light);transform:translateY(-2px);box-shadow:0 16px 48px rgba(201,162,39,.35)}
+.btn-cta-big{display:inline-flex;align-items:center;gap:12px;color:#000;font-size:15px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:18px 40px;z-index:1}
 .btn-cta-big svg{width:22px;height:22px}
 
 footer{background:#050505;border-top:1px solid var(--border);padding:40px 6% 32px;display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:flex-start;}
@@ -163,7 +188,7 @@ footer{background:#050505;border-top:1px solid var(--border);padding:40px 6% 32p
 
 <nav>
   <div class="nav-brand">Vasco <span>Import</span></div>
-  <a href="https://wa.me/5571997383343?text=Olá%2C+vim+pelo+site+e+quero+um+orçamento" class="nav-wa" target="_blank">
+  <a href="https://wa.me/5571997383343?text=Olá%2C+vim+pelo+site+e+quero+um+orçamento" class="nav-wa snake-btn snake-gold" target="_blank">
     <svg viewBox="0 0 24 24" class="wa"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
     WhatsApp
   </a>
@@ -177,11 +202,11 @@ footer{background:#050505;border-top:1px solid var(--border);padding:40px 6% 32p
   <h1>Peças<br><em>automotivas</em><br>de verdade</h1>
   <p class="hero-sub">Originais, paralelas e importadas. 3 unidades em Salvador. Mais de 25 anos atendendo quem entende de carro.</p>
   <div class="hero-cta">
-    <a href="https://wa.me/5571997383343?text=Olá%2C+vim+pelo+site+e+quero+um+orçamento" class="btn-primary" target="_blank">
+    <a href="https://wa.me/5571997383343?text=Olá%2C+vim+pelo+site+e+quero+um+orçamento" class="btn-primary snake-btn snake-gold" target="_blank">
       <svg viewBox="0 0 24 24" class="wa"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
       Pedir orçamento
     </a>
-    <a href="#unidades" class="btn-ghost">Ver unidades ↓</a>
+    <a href="#unidades" class="btn-ghost snake-btn snake-ghost">Ver unidades ↓</a>
   </div>
   <div class="hero-stats">
     <div class="stat"><div class="stat-n"><span>+</span>25</div><div class="stat-l">Anos de mercado</div></div>
@@ -278,11 +303,11 @@ footer{background:#050505;border-top:1px solid var(--border);padding:40px 6% 32p
         <div class="uni-row"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.68A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>(71) 3251-8300</div>
       </div>
       <div class="uni-btns">
-        <a href="https://wa.me/5571997383343?text=Olá%2C+vim+pelo+site.+Quero+falar+sobre+a+unidade+São+Cristóvão+(Av.+Principal)" class="u-btn-wa" target="_blank">
+        <a href="https://wa.me/5571997383343?text=Olá%2C+vim+pelo+site.+Quero+falar+sobre+a+unidade+São+Cristóvão+(Av.+Principal)" class="u-btn-wa snake-btn snake-green" target="_blank">
           <svg viewBox="0 0 24 24" class="wa"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
           WhatsApp esta unidade
         </a>
-        <a href="https://maps.google.com/?q=Av.+São+Cristóvão,+S/N,+São+Cristóvão,+Salvador,+BA" class="u-btn-map" target="_blank">
+        <a href="https://maps.google.com/?q=Av.+São+Cristóvão,+S/N,+São+Cristóvão,+Salvador,+BA" class="u-btn-map snake-btn snake-ghost-dark" target="_blank">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Ver no mapa
         </a>
       </div>
@@ -296,11 +321,11 @@ footer{background:#050505;border-top:1px solid var(--border);padding:40px 6% 32p
         <div class="uni-row"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.68A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>(71) 3251-8300</div>
       </div>
       <div class="uni-btns">
-        <a href="https://wa.me/5571997383343?text=Olá%2C+vim+pelo+site.+Quero+falar+sobre+a+unidade+São+Cristóvão+(Bela+Vista)" class="u-btn-wa" target="_blank">
+        <a href="https://wa.me/5571997383343?text=Olá%2C+vim+pelo+site.+Quero+falar+sobre+a+unidade+São+Cristóvão+(Bela+Vista)" class="u-btn-wa snake-btn snake-green" target="_blank">
           <svg viewBox="0 0 24 24" class="wa"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
           WhatsApp esta unidade
         </a>
-        <a href="https://maps.google.com/?q=R.+Bela+Vista+do+Aeroporto,+9,+São+Cristóvão,+Salvador,+BA" class="u-btn-map" target="_blank">
+        <a href="https://maps.google.com/?q=R.+Bela+Vista+do+Aeroporto,+9,+São+Cristóvão,+Salvador,+BA" class="u-btn-map snake-btn snake-ghost-dark" target="_blank">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Ver no mapa
         </a>
       </div>
@@ -314,11 +339,11 @@ footer{background:#050505;border-top:1px solid var(--border);padding:40px 6% 32p
         <div class="uni-row"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.68A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>(71) 3255-6070</div>
       </div>
       <div class="uni-btns">
-        <a href="https://wa.me/5571997383343?text=Olá%2C+vim+pelo+site.+Quero+falar+sobre+a+unidade+Baixa+de+Quintas" class="u-btn-wa" target="_blank">
+        <a href="https://wa.me/5571997383343?text=Olá%2C+vim+pelo+site.+Quero+falar+sobre+a+unidade+Baixa+de+Quintas" class="u-btn-wa snake-btn snake-green" target="_blank">
           <svg viewBox="0 0 24 24" class="wa"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
           WhatsApp esta unidade
         </a>
-        <a href="https://maps.google.com/?q=R.+Gen.+Argolo,+199,+Baixa+de+Quintas,+Salvador,+BA" class="u-btn-map" target="_blank">
+        <a href="https://maps.google.com/?q=R.+Gen.+Argolo,+199,+Baixa+de+Quintas,+Salvador,+BA" class="u-btn-map snake-btn snake-ghost-dark" target="_blank">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Ver no mapa
         </a>
       </div>
@@ -330,7 +355,7 @@ footer{background:#050505;border-top:1px solid var(--border);padding:40px 6% 32p
 <section class="cta-bg reveal">
   <h2>Encontrou a peça<br>que <em>precisa?</em></h2>
   <p>Fale agora. Atendimento pelo WhatsApp, rápido e direto.</p>
-  <a href="https://wa.me/5571997383343?text=Olá%2C+vim+pelo+site+e+quero+um+orçamento" class="btn-cta-big" target="_blank">
+  <a href="https://wa.me/5571997383343?text=Olá%2C+vim+pelo+site+e+quero+um+orçamento" class="btn-cta-big snake-btn snake-gold" target="_blank">
     <svg viewBox="0 0 24 24" class="wa"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
     Falar pelo WhatsApp
   </a>
